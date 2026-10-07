@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 import unittest
 
 
@@ -110,6 +111,38 @@ class ResumeStructureTests(unittest.TestCase):
         self.assertIn('class="resume-portrait-placeholder"', source)
         self.assertIn("个人照片预留位置", page.labels)
         self.assertNotIn("<img", source)
+
+
+class ResumePresentationTests(unittest.TestCase):
+    def test_resume_defines_scoped_card_grid_and_timeline(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn(".resume-page", css)
+        self.assertIn(".resume-grid", css)
+        self.assertIn(".resume-card", css)
+        self.assertIn(".resume-timeline", css)
+        self.assertIn(".resume-timeline-item", css)
+
+    def test_resume_styles_portrait_and_credential_tags(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn(".resume-portrait-placeholder", css)
+        self.assertIn(".resume-credential-list", css)
+        self.assertIn(".resume-credential-list li", css)
+
+    def test_contact_anchor_accounts_for_sticky_navigation(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertRegex(css, r"#contact\s*\{[^}]*scroll-margin-top:")
+
+    def test_resume_has_mobile_single_column_rules(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        mobile = re.search(r"@media\s*\(max-width:\s*760px\)\s*\{(?P<body>.*?)\n\}", css, re.S)
+        self.assertIsNotNone(mobile)
+        self.assertIn(".resume-grid", mobile.group("body"))
+        self.assertIn("grid-template-columns: 1fr", mobile.group("body"))
+
+    def test_resume_inherits_reduced_motion_support(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn("@media (prefers-reduced-motion: reduce)", css)
+        self.assertIn(".js .reveal", css)
 
 
 if __name__ == "__main__":
