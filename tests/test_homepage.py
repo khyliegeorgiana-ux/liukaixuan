@@ -69,6 +69,14 @@ class HomepageStructureTests(unittest.TestCase):
         _, page, _ = parse_homepage()
         self.assertIn("resume.html#contact", page.links)
 
+    def test_hero_uses_resume_portfolio_title(self):
+        source, _, text = parse_homepage()
+        self.assertIn("刘凯旋的", text)
+        self.assertIn("个人简历以及作品集", text)
+        self.assertNotIn("你好，我是", text)
+        self.assertIn('src="assets/kx-glass-monogram.png"', source)
+        self.assertIn('alt="玻璃金属质感的 KX 个人标识"', source)
+
 
 class HomepagePresentationTests(unittest.TestCase):
     def test_assets_are_linked(self):
@@ -119,6 +127,7 @@ class HomepagePresentationTests(unittest.TestCase):
         self.assertIn('class="glass-stage', source)
         self.assertGreaterEqual(source.count('class="glass-orbit'), 2)
         self.assertIn('class="hero-image-frame', source)
+        self.assertIn('class="monogram-art', source)
 
     def test_palette_has_visible_blue_accents(self):
         css = (ROOT / "styles.css").read_text(encoding="utf-8")
