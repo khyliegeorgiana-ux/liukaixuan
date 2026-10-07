@@ -108,6 +108,24 @@ class HomepagePresentationTests(unittest.TestCase):
             self.assertGreaterEqual(contrast_ratio(css_variable(css, name), surface), 4.5)
         self.assertGreaterEqual(contrast_ratio(css_variable(css, "--color-blue-hover"), "#ffffff"), 4.5)
 
+    def test_homepage_uses_numbered_modules_and_bento_grid(self):
+        source, _, _ = parse_homepage()
+        self.assertGreaterEqual(source.count('class="section-number"'), 3)
+        self.assertIn('class="bento-grid', source)
+        self.assertIn('class="bento-card bento-card-featured', source)
+
+    def test_hero_uses_layered_glass_visual(self):
+        source, _, _ = parse_homepage()
+        self.assertIn('class="glass-stage', source)
+        self.assertGreaterEqual(source.count('class="glass-orbit'), 2)
+        self.assertIn('class="hero-image-frame', source)
+
+    def test_palette_has_visible_blue_accents(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn("--color-blue-vivid", css)
+        self.assertIn("--gradient-hero", css)
+        self.assertIn("var(--color-blue-vivid)", css)
+
     def test_mobile_menu_has_accessible_state(self):
         source, _, _ = parse_homepage()
         script = (ROOT / "script.js").read_text(encoding="utf-8")
