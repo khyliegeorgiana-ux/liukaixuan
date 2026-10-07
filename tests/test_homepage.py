@@ -52,5 +52,40 @@ class HomepageStructureTests(unittest.TestCase):
         self.assertIn("resume.html#contact", page.links)
 
 
+class HomepagePresentationTests(unittest.TestCase):
+    def test_assets_are_linked(self):
+        source, _, _ = parse_homepage()
+        self.assertIn('href="styles.css"', source)
+        self.assertIn('src="script.js"', source)
+
+    def test_styles_define_palette_and_responsive_rules(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn("--color-blue", css)
+        self.assertIn("--color-surface", css)
+        self.assertRegex(css, r"@media\s*\([^)]*max-width:\s*760px")
+
+    def test_page_prevents_mobile_overflow(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertRegex(css, r"overflow-x:\s*(?:hidden|clip)")
+
+    def test_reduced_motion_is_supported(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn("prefers-reduced-motion: reduce", css)
+
+    def test_content_remains_visible_without_javascript(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        script = (ROOT / "script.js").read_text(encoding="utf-8")
+        self.assertIn(".js .reveal", css)
+        self.assertIn("document.documentElement.classList.add('js')", script)
+
+    def test_mobile_menu_has_accessible_state(self):
+        source, _, _ = parse_homepage()
+        script = (ROOT / "script.js").read_text(encoding="utf-8")
+        self.assertIn('class="menu-toggle"', source)
+        self.assertIn('class="nav-links"', source)
+        self.assertIn("aria-expanded", script)
+        self.assertIn("Escape", script)
+
+
 if __name__ == "__main__":
     unittest.main()
