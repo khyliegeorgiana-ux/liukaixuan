@@ -41,11 +41,10 @@ button { font: inherit; }
 .brand-mark { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--color-line); border-radius: 50%; background: rgba(255,255,255,.7); }
 .brand-orbit { position: relative; width: 23px; height: 23px; border: 1px solid var(--color-blue-strong); border-radius: 50%; }
 .brand-orbit::after { content: ""; position: absolute; width: 7px; height: 7px; top: -1px; right: -1px; border-radius: 50%; background: var(--color-blue-strong); box-shadow: -13px 17px 0 #bfdcf5; }
-.nav-links { display: flex; align-items: center; gap: 38px; margin: 0; padding: 0; list-style: none; }
-.nav-links a { position: relative; padding: 28px 0 23px; color: var(--color-muted); font-size: 14px; }
-.nav-links a::after { content: ""; position: absolute; left: 50%; bottom: 18px; width: 4px; height: 4px; background: var(--color-blue-strong); border-radius: 50%; opacity: 0; transform: translateX(-50%); }
-.nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--color-ink); }
-.nav-links a[aria-current="page"]::after { opacity: 1; }
+.nav-links { display: flex; align-items: center; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.nav-pill { display: inline-flex; min-width: 72px; min-height: 38px; align-items: center; justify-content: center; padding: 8px 20px; border: 1px solid rgba(46,111,167,.18); border-radius: 999px; color: var(--color-muted); background: rgba(255,255,255,.52); font-size: 14px; transition: color .22s, background .22s, border-color .22s, box-shadow .22s, transform .22s; }
+.nav-pill:hover { color: var(--color-blue-strong); border-color: rgba(46,111,167,.34); background: var(--color-blue-pale); transform: translateY(-1px); }
+.nav-pill[aria-current="page"] { color: #174d7a; border-color: rgba(46,111,167,.36); background: #dcefff; box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 6px 16px rgba(58,120,170,.1); font-weight: 650; }
 .menu-toggle { display: none; border: 0; background: transparent; color: var(--color-ink); }
 
 .eyebrow { display: flex; align-items: center; gap: 12px; margin: 0 0 24px; color: var(--color-blue-strong); font-size: 11px; font-weight: 700; letter-spacing: .18em; }
@@ -151,17 +150,15 @@ button { font: inherit; }
   .site-nav { height: 68px; }
   .brand-mark { width: 40px; height: 40px; }
   .nav-links { flex-wrap: wrap; justify-content: flex-end; gap: 14px; }
-  .nav-links a { padding: 14px 0; }
   .js .menu-toggle { display: flex; align-items: center; gap: 10px; padding: 10px 0 10px 14px; cursor: pointer; }
   .menu-toggle i, .menu-toggle i::after { display: block; width: 18px; height: 1px; background: var(--color-ink); transition: transform .25s; }
   .menu-toggle i { position: relative; }
   .menu-toggle i::after { content: ""; position: absolute; top: 5px; }
   .menu-toggle[aria-expanded="true"] i { transform: rotate(45deg); }
   .menu-toggle[aria-expanded="true"] i::after { top: 0; transform: rotate(90deg); }
-  .js .nav-links { position: absolute; inset: 68px 0 auto; display: grid; gap: 0; padding: 10px 24px 22px; background: rgba(255,254,250,.97); border-bottom: 1px solid var(--color-line); box-shadow: 0 20px 40px rgba(42,80,111,.1); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .2s, transform .2s, visibility .2s; }
+  .js .nav-links { position: absolute; inset: 68px 0 auto; display: grid; gap: 10px; padding: 14px 24px 22px; background: rgba(255,254,250,.97); border-bottom: 1px solid var(--color-line); box-shadow: 0 20px 40px rgba(42,80,111,.1); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .2s, transform .2s, visibility .2s; }
   .js .nav-links.is-open { opacity: 1; visibility: visible; transform: none; }
-  .js .nav-links a { display: block; padding: 14px 0; border-bottom: 1px solid rgba(73,117,153,.1); }
-  .nav-links a::after { display: none; }
+  .js .nav-pill { display: flex; width: 100%; min-height: 46px; padding: 10px 18px; }
   .hero { grid-template-columns: 1fr; margin-top: 16px; margin-bottom: 52px; padding: 48px 24px 24px; border-radius: 26px; }
   .hero h1 { font-size: clamp(42px, 12vw, 62px); }
   .hero-visual { width: min(100%, 470px); justify-self: center; border-radius: 24px; }

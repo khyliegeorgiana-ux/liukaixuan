@@ -56,7 +56,14 @@ class HomepageStructureTests(unittest.TestCase):
 
     def test_navigation_targets_are_stable(self):
         _, page, _ = parse_homepage()
-        self.assertTrue({"index.html", "about.html", "resume.html", "portfolio.html"} <= set(page.links))
+        self.assertTrue({"index.html", "resume.html", "portfolio.html"} <= set(page.links))
+
+    def test_navigation_has_three_pill_links(self):
+        source, page, text = parse_homepage()
+        self.assertNotIn("about.html", page.links)
+        self.assertNotIn("关于我", text)
+        self.assertEqual(source.count('class="nav-pill"'), 3)
+        self.assertIn('class="nav-pill" href="index.html" aria-current="page"', source)
 
     def test_copy_uses_approved_positioning(self):
         _, _, text = parse_homepage()
@@ -148,6 +155,12 @@ class HomepagePresentationTests(unittest.TestCase):
         self.assertIn('class="nav-links"', source)
         self.assertIn("aria-expanded", script)
         self.assertIn("Escape", script)
+
+    def test_navigation_pills_define_active_and_hover_states(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn(".nav-pill {", css)
+        self.assertIn('.nav-pill[aria-current="page"]', css)
+        self.assertIn(".nav-pill:hover", css)
 
 
 if __name__ == "__main__":
