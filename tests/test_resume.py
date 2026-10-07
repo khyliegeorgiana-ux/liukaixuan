@@ -74,6 +74,20 @@ class ResumeStructureTests(unittest.TestCase):
         ):
             self.assertIn(phrase, text)
 
+    def test_resume_preserves_complete_source_details(self):
+        _, _, text = parse_resume()
+        for phrase in (
+            "Excel、PPT、XMind",
+            "逻辑思维与数据分析",
+            "提示词优化",
+            "珠宝、化妆品",
+            "从视频方向选择、分镜与片段生成，到最终剪辑",
+            "二创内容与全新视频制作",
+            "商品上架、妙手 ERP 定价与投流",
+            "亚马逊产品视频和套图",
+        ):
+            self.assertIn(phrase, text)
+
     def test_resume_contains_approved_skills_and_credentials(self):
         _, _, text = parse_resume()
         for phrase in (
@@ -143,6 +157,14 @@ class ResumePresentationTests(unittest.TestCase):
         css = (ROOT / "styles.css").read_text(encoding="utf-8")
         self.assertIn("@media (prefers-reduced-motion: reduce)", css)
         self.assertIn(".js .reveal", css)
+
+    def test_printing_forces_reveal_cards_visible(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        print_rule = re.search(r"@media\s+print\s*\{(?P<body>.*?)\n\}", css, re.S)
+        self.assertIsNotNone(print_rule)
+        self.assertIn(".js .reveal", print_rule.group("body"))
+        self.assertIn("opacity: 1 !important", print_rule.group("body"))
+        self.assertIn("transform: none !important", print_rule.group("body"))
 
 
 if __name__ == "__main__":
