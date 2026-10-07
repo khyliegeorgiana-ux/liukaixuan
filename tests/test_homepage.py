@@ -77,6 +77,12 @@ class HomepageStructureTests(unittest.TestCase):
         self.assertIn('src="assets/kx-glass-monogram.png"', source)
         self.assertIn('alt="玻璃金属质感的 KX 个人标识"', source)
 
+    def test_hero_omits_summary_modules(self):
+        source, _, text = parse_homepage()
+        self.assertNotIn('class="hero-stats"', source)
+        for label in ("专注领域", "创作能力", "合作状态", "开放新机会"):
+            self.assertNotIn(label, text)
+
 
 class HomepagePresentationTests(unittest.TestCase):
     def test_assets_are_linked(self):
