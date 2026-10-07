@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 import unittest
 
 
@@ -29,6 +30,23 @@ def parse_homepage():
     parser = PageParser()
     parser.feed(source)
     return source, parser, " ".join(parser.text)
+
+
+def contrast_ratio(first, second):
+    def luminance(value):
+        channels = [int(value[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+        channels = [channel / 12.92 if channel <= 0.04045 else ((channel + 0.055) / 1.055) ** 2.4 for channel in channels]
+        return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+
+    light, dark = sorted((luminance(first), luminance(second)), reverse=True)
+    return (light + 0.05) / (dark + 0.05)
+
+
+def css_variable(css, name):
+    match = re.search(rf"{re.escape(name)}:\s*(#[0-9a-fA-F]{{6}})", css)
+    if not match:
+        raise AssertionError(f"Missing CSS variable {name}")
+    return match.group(1)
 
 
 class HomepageStructureTests(unittest.TestCase):
@@ -77,6 +95,18 @@ class HomepagePresentationTests(unittest.TestCase):
         script = (ROOT / "script.js").read_text(encoding="utf-8")
         self.assertIn(".js .reveal", css)
         self.assertIn("document.documentElement.classList.add('js')", script)
+
+    def test_mobile_navigation_remains_visible_without_javascript(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn(".js .nav-links {", css)
+        self.assertIn(".js .menu-toggle {", css)
+
+    def test_small_text_palette_meets_wcag_aa_contrast(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        surface = css_variable(css, "--color-surface")
+        for name in ("--color-blue-strong", "--color-label"):
+            self.assertGreaterEqual(contrast_ratio(css_variable(css, name), surface), 4.5)
+        self.assertGreaterEqual(contrast_ratio(css_variable(css, "--color-blue-hover"), "#ffffff"), 4.5)
 
     def test_mobile_menu_has_accessible_state(self):
         source, _, _ = parse_homepage()
