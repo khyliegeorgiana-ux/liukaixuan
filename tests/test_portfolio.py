@@ -16,6 +16,7 @@ class PortfolioParser(HTMLParser):
         self.text = []
         self.videos = []
         self.sources = []
+        self.images = []
 
     def handle_starttag(self, tag, attrs):
         attributes = dict(attrs)
@@ -29,6 +30,8 @@ class PortfolioParser(HTMLParser):
             self.videos.append(attributes)
         if tag == "source":
             self.sources.append(attributes)
+        if tag == "img":
+            self.images.append(attributes)
 
     def handle_data(self, data):
         self.text.append(data)
@@ -67,7 +70,8 @@ class PortfolioStructureTests(unittest.TestCase):
         self.assertIn('aria-controls="design-projects"', source)
         self.assertIn('aria-controls="video-projects"', source)
         self.assertIn('aria-selected="true"', source)
-        self.assertIn("作品整理中", text)
+        self.assertIn("咖啡机详情页", text)
+        self.assertNotIn("作品整理中", text)
 
     def test_portfolio_uses_eight_progressive_video_players(self):
         source, page, _ = parse_portfolio()
@@ -116,6 +120,28 @@ class PortfolioStructureTests(unittest.TestCase):
             asset = ROOT / relative
             self.assertTrue(asset.is_file(), relative)
             self.assertGreater(asset.stat().st_size, 0, relative)
+
+    def test_ecommerce_gallery_uses_eight_original_images(self):
+        source, page, text = parse_portfolio()
+        expected = [
+            ("assets/portfolio/designs/coffee-machine.webp", "咖啡机详情页"),
+            ("assets/portfolio/designs/portable-fan.webp", "便携风扇详情页"),
+            ("assets/portfolio/designs/cloud-sofa.webp", "云朵沙发详情页"),
+            ("assets/portfolio/designs/toothpaste.webp", "钻石皓洁牙膏详情页"),
+            ("assets/portfolio/designs/rice-cooker.webp", "智能电饭煲详情页"),
+            ("assets/portfolio/designs/headphones-design.webp", "Hi-Fi 耳机详情页"),
+            ("assets/portfolio/designs/sun-hat.webp", "防晒帽详情页"),
+            ("assets/portfolio/designs/sun-protective-clothing.webp", "冰感防晒衣详情页"),
+        ]
+        gallery_images = [image for image in page.images if image.get("class") == "design-image"]
+
+        self.assertEqual([image.get("src") for image in gallery_images], [item[0] for item in expected])
+        self.assertEqual([image.get("alt") for image in gallery_images], [item[1] for item in expected])
+        self.assertEqual(source.count('class="design-card reveal"'), 8)
+        for relative, title in expected:
+            self.assertIn(title, text)
+            self.assertTrue((ROOT / relative).is_file(), relative)
+        self.assertNotIn("电商设计图作品整理中", text)
 
 
 class PortfolioPresentationTests(unittest.TestCase):
@@ -178,6 +204,17 @@ class PortfolioPresentationTests(unittest.TestCase):
         focus = re.search(r"\.js \.portfolio-play:focus-visible::before\s*\{(?P<body>[^}]*)\}", css, re.S)
         self.assertIsNotNone(focus)
         self.assertIn("box-shadow:", focus.group("body"))
+
+    def test_ecommerce_gallery_preserves_natural_image_ratios(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        gallery = re.search(r"\.design-gallery\s*\{(?P<body>[^}]*)\}", css, re.S)
+        image = re.search(r"\.design-image\s*\{(?P<body>[^}]*)\}", css, re.S)
+
+        self.assertIsNotNone(gallery)
+        self.assertIn("column-count: 3", gallery.group("body"))
+        self.assertIsNotNone(image)
+        self.assertIn("height: auto", image.group("body"))
+        self.assertNotIn("object-fit", image.group("body"))
 
 
 class PortfolioInteractionTests(unittest.TestCase):
