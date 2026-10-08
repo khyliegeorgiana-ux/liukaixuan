@@ -150,6 +150,18 @@ class PortfolioPresentationTests(unittest.TestCase):
         self.assertIn('.portfolio-tab[aria-selected="true"]', css)
         self.assertIn("prefers-reduced-motion: reduce", css)
 
+    def test_hidden_video_panel_overrides_grid_display(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        hidden = re.search(r"\.portfolio-video-panel\[hidden\]\s*\{(?P<body>[^}]*)\}", css, re.S)
+        self.assertIsNotNone(hidden)
+        self.assertIn("display: none", hidden.group("body"))
+
+    def test_play_button_has_unclipped_inner_focus_indicator(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        focus = re.search(r"\.js \.portfolio-play:focus-visible::before\s*\{(?P<body>[^}]*)\}", css, re.S)
+        self.assertIsNotNone(focus)
+        self.assertIn("box-shadow:", focus.group("body"))
+
 
 class PortfolioInteractionTests(unittest.TestCase):
     def test_script_coordinates_categories_and_video_playback(self):

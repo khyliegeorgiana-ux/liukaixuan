@@ -224,6 +224,7 @@ button { font: inherit; }
 .portfolio-tab-icon-video::after { content: ""; position: absolute; left: 8px; top: 5px; border-left: 7px solid currentColor; border-block: 5px solid transparent; }
 .portfolio-projects { padding-block: 22px 110px; }
 .portfolio-video-panel { display: grid; gap: 18px; }
+.portfolio-video-panel[hidden] { display: none; }
 .portfolio-card { overflow: hidden; border: 1px solid rgba(67,122,166,.17); border-radius: 26px; background: rgba(255,255,255,.9); box-shadow: inset 0 1px 0 rgba(255,255,255,.92), 0 18px 45px rgba(48,99,140,.1); transition: transform .3s, box-shadow .3s, border-color .3s; }
 .portfolio-card:hover { transform: translateY(-4px); border-color: rgba(46,111,167,.32); box-shadow: 0 27px 65px rgba(48,99,140,.16); }
 .portfolio-featured { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(300px, .72fr); align-items: stretch; padding: 10px; }
@@ -235,6 +236,8 @@ button { font: inherit; }
 .js .portfolio-play { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; width: 100%; height: 100%; padding: 0; border: 0; color: white; background: linear-gradient(180deg, transparent 45%, rgba(13,34,52,.15)); cursor: pointer; }
 .js .portfolio-play::before { content: ""; width: 72px; height: 72px; border: 1px solid rgba(255,255,255,.92); border-radius: 50%; background: rgba(21,44,63,.46); box-shadow: 0 12px 34px rgba(11,31,48,.22); backdrop-filter: blur(8px); transition: transform .25s, background .25s; }
 .js .portfolio-play:hover::before { transform: scale(1.07); background: rgba(22,119,232,.75); }
+.js .portfolio-play:focus-visible { outline: none; }
+.js .portfolio-play:focus-visible::before { box-shadow: 0 0 0 4px #ffffff, 0 0 0 8px rgba(22,119,232,.78), 0 12px 34px rgba(11,31,48,.22); }
 .portfolio-play > span { position: absolute; left: calc(50% + 3px); top: 50%; border-left: 18px solid white; border-block: 12px solid transparent; transform: translate(-50%, -50%); }
 .portfolio-card.is-playing .portfolio-play { opacity: 0; visibility: hidden; pointer-events: none; }
 .portfolio-featured-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(28px, 4vw, 52px); }
