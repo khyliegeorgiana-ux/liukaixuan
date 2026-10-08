@@ -135,6 +135,19 @@ class HomepagePresentationTests(unittest.TestCase):
         self.assertIn('class="bento-grid', source)
         self.assertIn('class="bento-card bento-card-featured', source)
 
+    def test_featured_work_uses_real_project_posters(self):
+        source, _, text = parse_homepage()
+        expected_projects = {
+            "assets/portfolio/posters/headphones.jpg": "沉浸式耳机产品视觉",
+            "assets/portfolio/posters/cleaning-cloth.jpg": "汽车玻璃清洁布演示",
+            "assets/portfolio/posters/outfit.jpg": "都市休闲穿搭短片",
+        }
+
+        for poster, title in expected_projects.items():
+            self.assertIn(f'src="{poster}"', source)
+            self.assertIn(title, text)
+        self.assertNotIn("即将上线", text)
+
     def test_hero_uses_layered_glass_visual(self):
         source, _, _ = parse_homepage()
         self.assertIn('class="glass-stage', source)
