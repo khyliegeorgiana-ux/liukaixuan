@@ -148,6 +148,20 @@ class HomepagePresentationTests(unittest.TestCase):
             self.assertIn(title, text)
         self.assertNotIn("即将上线", text)
 
+    def test_featured_work_uses_two_portraits_above_one_landscape(self):
+        source, _, _ = parse_homepage()
+        cleaning = source.index("cleaning-cloth.jpg")
+        outfit = source.index("outfit.jpg")
+        headphones = source.index("headphones.jpg")
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+
+        self.assertLess(cleaning, outfit)
+        self.assertLess(outfit, headphones)
+        self.assertEqual(source.count('class="bento-card work-card work-card-portrait'), 2)
+        self.assertIn('class="bento-card bento-card-featured work-card work-card-landscape', source)
+        self.assertRegex(css, r"\.work-card-portrait\s+\.work-art\s*\{[^}]*aspect-ratio:\s*9\s*/\s*16")
+        self.assertRegex(css, r"\.work-card-landscape\s+\.work-art\s*\{[^}]*aspect-ratio:\s*16\s*/\s*9")
+
     def test_hero_uses_layered_glass_visual(self):
         source, _, _ = parse_homepage()
         self.assertIn('class="glass-stage', source)

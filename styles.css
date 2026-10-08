@@ -103,12 +103,11 @@ button { font: inherit; }
 .work-heading { display: grid; grid-template-columns: 1fr .78fr auto; align-items: end; gap: 60px; margin-bottom: 44px; }
 .work-heading > p { margin: 0; color: var(--color-muted); font-size: 14px; }
 .text-link { padding-bottom: 6px; border-bottom: 1px solid var(--color-ink); font-size: 13px; font-weight: 650; white-space: nowrap; }
-.work-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(2, minmax(230px, auto)); gap: 18px; }
+.work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .work-card { overflow: hidden; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: white; transition: transform .3s, box-shadow .3s; }
-.bento-card { grid-column: span 5; }
-.bento-card-featured { grid-column: span 7; grid-row: span 2; }
-.bento-card-featured > a { height: 100%; display: grid; grid-template-rows: 1fr auto; }
-.bento-card-featured .work-art { min-height: 480px; }
+.bento-card-featured { grid-column: 1 / -1; }
+.work-card-portrait .work-art { min-height: 0; aspect-ratio: 9 / 16; }
+.work-card-landscape .work-art { min-height: 0; aspect-ratio: 16 / 9; }
 .work-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-soft); }
 .work-art { position: relative; min-height: 230px; overflow: hidden; padding: 22px; background: #dceeff; }
 .work-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,38,54,.18), transparent 42%, rgba(20,38,54,.08)); pointer-events: none; }
@@ -271,10 +270,9 @@ button { font: inherit; }
   .capabilities-layout { grid-template-columns: 1fr; }
   .work-heading { grid-template-columns: 1fr auto; }
   .work-heading > p { grid-column: 1 / -1; grid-row: 2; }
-  .work-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
-  .bento-card, .bento-card-featured { grid-column: auto; grid-row: auto; }
+  .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bento-card { grid-column: auto; }
   .bento-card-featured { grid-column: 1 / -1; }
-  .bento-card-featured .work-art { min-height: 420px; }
   .resume-intro { grid-template-columns: 1fr 280px; padding: 54px 46px; }
   .resume-education, .resume-credentials { grid-column: 1 / -1; }
   .portfolio-intro { grid-template-columns: 1fr; gap: 34px; }
@@ -305,10 +303,12 @@ button { font: inherit; }
   .capabilities-layout { gap: 42px; }
   .work-heading { grid-template-columns: 1fr; gap: 22px; }
   .work-heading > p { grid-column: auto; grid-row: auto; }
-  .work-grid { grid-template-columns: 1fr; }
-  .bento-card, .bento-card-featured, .work-card:last-child { grid-column: auto; }
-  .bento-card-featured .work-art { min-height: 360px; }
-  .work-art { min-height: 340px; }
+  .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .bento-card { grid-column: auto; }
+  .bento-card-featured, .work-card:last-child { grid-column: 1 / -1; }
+  .work-card-portrait .work-meta { padding: 18px 15px 20px; }
+  .work-card-portrait .work-meta h3 { font-size: 16px; }
+  .work-card-portrait .work-meta > p:last-child { font-size: 10px; }
   .collaboration { min-height: 380px; margin-bottom: 70px; padding: 58px 26px; }
   .site-footer { grid-template-columns: 1fr; gap: 16px; padding-block: 34px; text-align: center; }
   .site-footer nav { justify-content: center; }
