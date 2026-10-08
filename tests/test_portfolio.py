@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 import unittest
 
 
@@ -109,6 +110,62 @@ class PortfolioStructureTests(unittest.TestCase):
             asset = ROOT / relative
             self.assertTrue(asset.is_file(), relative)
             self.assertGreater(asset.stat().st_size, 0, relative)
+
+
+class PortfolioPresentationTests(unittest.TestCase):
+    def test_portfolio_defines_cinema_layout_and_aspect_ratios(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn(".portfolio-page", css)
+        self.assertIn(".portfolio-featured", css)
+        self.assertIn(".portfolio-portrait-grid", css)
+        landscape = re.search(r"\.portfolio-media-landscape\s*\{(?P<body>[^}]*)\}", css, re.S)
+        portrait = re.search(r"\.portfolio-media-portrait\s*\{(?P<body>[^}]*)\}", css, re.S)
+        self.assertIsNotNone(landscape)
+        self.assertIsNotNone(portrait)
+        self.assertIn("aspect-ratio: 16 / 9", landscape.group("body"))
+        self.assertIn("aspect-ratio: 9 / 16", portrait.group("body"))
+
+    def test_portfolio_media_has_poster_fallback(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        media = re.search(r"\.portfolio-media\s*\{(?P<body>[^}]*)\}", css, re.S)
+        self.assertIsNotNone(media)
+        self.assertIn("background:", media.group("body"))
+        self.assertIn("overflow: hidden", media.group("body"))
+
+    def test_portfolio_has_tablet_and_mobile_grid_rules(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        tablet_start = css.index("@media (max-width: 960px)")
+        mobile_start = css.index("@media (max-width: 760px)")
+        tablet = css[tablet_start:mobile_start]
+        mobile = css[mobile_start:css.index("@media (max-width: 480px)")]
+        self.assertIn(".portfolio-portrait-grid", tablet)
+        self.assertIn("repeat(2, minmax(0, 1fr))", tablet)
+        self.assertIn(".portfolio-portrait-grid", mobile)
+        self.assertIn("grid-template-columns: 1fr", mobile)
+
+    def test_portfolio_styles_progressive_play_and_tab_states(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn(".js .portfolio-play", css)
+        self.assertIn(".portfolio-card.is-playing", css)
+        self.assertIn('.portfolio-tab[aria-selected="true"]', css)
+        self.assertIn("prefers-reduced-motion: reduce", css)
+
+
+class PortfolioInteractionTests(unittest.TestCase):
+    def test_script_coordinates_categories_and_video_playback(self):
+        script = (ROOT / "script.js").read_text(encoding="utf-8")
+        self.assertIn("portfolioTabs", script)
+        self.assertIn("portfolioVideos", script)
+        self.assertIn("activatePortfolioCategory", script)
+        self.assertIn("video.pause()", script)
+        self.assertIn("addEventListener('play'", script)
+        self.assertIn("classList.add('is-playing')", script)
+
+    def test_script_activates_cover_buttons(self):
+        script = (ROOT / "script.js").read_text(encoding="utf-8")
+        self.assertIn("portfolioPlayButtons", script)
+        self.assertIn("button.closest('.portfolio-card')", script)
+        self.assertIn("video.play()", script)
 
 
 if __name__ == "__main__":
