@@ -1,0 +1,115 @@
+from html.parser import HTMLParser
+from pathlib import Path
+import unittest
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class PortfolioParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.ids = set()
+        self.links = []
+        self.current_links = []
+        self.text = []
+        self.videos = []
+        self.sources = []
+
+    def handle_starttag(self, tag, attrs):
+        attributes = dict(attrs)
+        if "id" in attributes:
+            self.ids.add(attributes["id"])
+        if tag == "a" and "href" in attributes:
+            self.links.append(attributes["href"])
+            if attributes.get("aria-current") == "page":
+                self.current_links.append(attributes["href"])
+        if tag == "video":
+            self.videos.append(attributes)
+        if tag == "source":
+            self.sources.append(attributes)
+
+    def handle_data(self, data):
+        self.text.append(data)
+
+
+def parse_portfolio():
+    source = (ROOT / "portfolio.html").read_text(encoding="utf-8")
+    parser = PortfolioParser()
+    parser.feed(source)
+    return source, parser, " ".join(parser.text)
+
+
+class PortfolioStructureTests(unittest.TestCase):
+    def test_portfolio_has_required_sections(self):
+        _, page, _ = parse_portfolio()
+        required = {
+            "portfolio-intro",
+            "portfolio-categories",
+            "design-projects",
+            "video-projects",
+            "featured-video",
+            "portrait-videos",
+        }
+        self.assertTrue(required <= page.ids)
+
+    def test_portfolio_uses_approved_navigation_state(self):
+        source, page, _ = parse_portfolio()
+        self.assertEqual(source.count('class="nav-pill"'), 3)
+        self.assertTrue({"index.html", "resume.html", "portfolio.html"} <= set(page.links))
+        self.assertEqual(page.current_links, ["portfolio.html"])
+
+    def test_portfolio_has_approved_categories(self):
+        source, _, text = parse_portfolio()
+        self.assertIn("电商设计图", text)
+        self.assertIn("AI 视频", text)
+        self.assertIn('aria-controls="design-projects"', source)
+        self.assertIn('aria-controls="video-projects"', source)
+        self.assertIn('aria-selected="true"', source)
+        self.assertIn("作品整理中", text)
+
+    def test_portfolio_uses_five_progressive_video_players(self):
+        source, page, _ = parse_portfolio()
+        self.assertEqual(len(page.videos), 5)
+        self.assertEqual(len(page.sources), 5)
+        for video in page.videos:
+            self.assertIn("controls", video)
+            self.assertEqual(video.get("preload"), "metadata")
+            self.assertIn("playsinline", video)
+            self.assertNotIn("autoplay", video)
+            self.assertTrue(video.get("poster", "").startswith("assets/portfolio/posters/"))
+        self.assertEqual(len({video["poster"] for video in page.videos}), 5)
+        self.assertEqual(source.count('class="portfolio-play"'), 5)
+
+    def test_portfolio_uses_approved_media_order_and_titles(self):
+        _, page, text = parse_portfolio()
+        expected_sources = [
+            "assets/portfolio/videos/headphones.mp4",
+            "assets/portfolio/videos/cleaning-cloth.mp4",
+            "assets/portfolio/videos/ice-tray.mp4",
+            "assets/portfolio/videos/storage-box.mp4",
+            "assets/portfolio/videos/outfit.mp4",
+        ]
+        self.assertEqual([item.get("src") for item in page.sources], expected_sources)
+        titles = [
+            "沉浸式耳机产品视觉",
+            "汽车玻璃清洁布演示",
+            "便携制冰盒产品短片",
+            "帽子收纳盒场景展示",
+            "都市休闲穿搭短片",
+        ]
+        positions = [text.index(title) for title in titles]
+        self.assertEqual(positions, sorted(positions))
+
+    def test_referenced_media_assets_exist(self):
+        _, page, _ = parse_portfolio()
+        paths = [item["poster"] for item in page.videos]
+        paths.extend(item["src"] for item in page.sources)
+        for relative in paths:
+            asset = ROOT / relative
+            self.assertTrue(asset.is_file(), relative)
+            self.assertGreater(asset.stat().st_size, 0, relative)
+
+
+if __name__ == "__main__":
+    unittest.main()
