@@ -69,34 +69,40 @@ class PortfolioStructureTests(unittest.TestCase):
         self.assertIn('aria-selected="true"', source)
         self.assertIn("作品整理中", text)
 
-    def test_portfolio_uses_five_progressive_video_players(self):
+    def test_portfolio_uses_eight_progressive_video_players(self):
         source, page, _ = parse_portfolio()
-        self.assertEqual(len(page.videos), 5)
-        self.assertEqual(len(page.sources), 5)
+        self.assertEqual(len(page.videos), 8)
+        self.assertEqual(len(page.sources), 8)
         for video in page.videos:
             self.assertIn("controls", video)
             self.assertEqual(video.get("preload"), "metadata")
             self.assertIn("playsinline", video)
             self.assertNotIn("autoplay", video)
             self.assertTrue(video.get("poster", "").startswith("assets/portfolio/posters/"))
-        self.assertEqual(len({video["poster"] for video in page.videos}), 5)
-        self.assertEqual(source.count('class="portfolio-play"'), 5)
+        self.assertEqual(len({video["poster"] for video in page.videos}), 8)
+        self.assertEqual(source.count('class="portfolio-play"'), 8)
 
     def test_portfolio_uses_approved_media_order_and_titles(self):
         _, page, text = parse_portfolio()
         expected_sources = [
             "assets/portfolio/videos/headphones.mp4",
             "assets/portfolio/videos/cleaning-cloth.mp4",
+            "assets/portfolio/videos/windshield-cleaner.mp4",
             "assets/portfolio/videos/ice-tray.mp4",
             "assets/portfolio/videos/storage-box.mp4",
+            "assets/portfolio/videos/storage-bag.mp4",
+            "assets/portfolio/videos/fluffy-spray.mp4",
             "assets/portfolio/videos/outfit.mp4",
         ]
         self.assertEqual([item.get("src") for item in page.sources], expected_sources)
         titles = [
             "沉浸式耳机产品视觉",
             "汽车玻璃清洁布演示",
+            "汽车挡风玻璃清洁器演示",
             "便携制冰盒产品短片",
             "帽子收纳盒场景展示",
+            "真空收纳袋场景短片",
+            "蓬松喷雾使用短片",
             "都市休闲穿搭短片",
         ]
         positions = [text.index(title) for title in titles]
@@ -132,16 +138,27 @@ class PortfolioPresentationTests(unittest.TestCase):
         self.assertIn("background:", media.group("body"))
         self.assertIn("overflow: hidden", media.group("body"))
 
-    def test_portfolio_has_tablet_and_mobile_grid_rules(self):
+    def test_portfolio_has_tablet_and_mobile_card_rules(self):
         css = (ROOT / "styles.css").read_text(encoding="utf-8")
         tablet_start = css.index("@media (max-width: 960px)")
         mobile_start = css.index("@media (max-width: 760px)")
         tablet = css[tablet_start:mobile_start]
         mobile = css[mobile_start:css.index("@media (max-width: 480px)")]
-        self.assertIn(".portfolio-portrait-grid", tablet)
-        self.assertIn("repeat(2, minmax(0, 1fr))", tablet)
-        self.assertIn(".portfolio-portrait-grid", mobile)
-        self.assertIn("grid-template-columns: 1fr", mobile)
+        self.assertIn(".portfolio-portrait-card", tablet)
+        self.assertRegex(tablet, r"flex-basis:\s*calc\(\(100%\s*-\s*18px\)\s*/\s*2\)")
+        self.assertIn(".portfolio-portrait-card", mobile)
+        self.assertRegex(mobile, r"flex-basis:\s*100%")
+
+    def test_seven_portrait_cards_wrap_and_center_the_last_row(self):
+        source, _, _ = parse_portfolio()
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        portrait_grid = re.search(r"\.portfolio-portrait-grid\s*\{(?P<body>[^}]*)\}", css, re.S)
+
+        self.assertEqual(source.count('class="portfolio-card portfolio-portrait-card reveal"'), 7)
+        self.assertIsNotNone(portrait_grid)
+        self.assertIn("display: flex", portrait_grid.group("body"))
+        self.assertIn("flex-wrap: wrap", portrait_grid.group("body"))
+        self.assertIn("justify-content: center", portrait_grid.group("body"))
 
     def test_portfolio_styles_progressive_play_and_tab_states(self):
         css = (ROOT / "styles.css").read_text(encoding="utf-8")

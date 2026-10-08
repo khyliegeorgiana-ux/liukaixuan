@@ -245,8 +245,8 @@ button { font: inherit; }
 .portfolio-tags li { padding: 5px 10px; border: 1px solid rgba(46,111,167,.16); border-radius: 999px; color: #4f7592; background: var(--color-blue-mist); font-size: 10px; }
 .portfolio-meta { display: flex; gap: 10px; margin-top: 24px; color: #4d6c84; font-size: 11px; font-weight: 700; }
 .portfolio-meta span, .portfolio-meta time { padding: 5px 9px; border: 1px solid rgba(46,111,167,.15); border-radius: 999px; background: rgba(237,247,255,.88); }
-.portfolio-portrait-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
-.portfolio-portrait-card { padding: 9px; }
+.portfolio-portrait-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.portfolio-portrait-card { flex: 0 1 calc((100% - 54px) / 4); min-width: 0; padding: 9px; }
 .portfolio-card-copy { padding: 20px 12px 14px; }
 .portfolio-card-copy h2 { min-height: 3em; margin: 0; font-size: 18px; line-height: 1.5; }
 .portfolio-card-copy .portfolio-meta { margin-top: 16px; }
@@ -277,7 +277,7 @@ button { font: inherit; }
   .resume-education, .resume-credentials { grid-column: 1 / -1; }
   .portfolio-intro { grid-template-columns: 1fr; gap: 34px; }
   .portfolio-featured { grid-template-columns: 1fr; }
-  .portfolio-portrait-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .portfolio-portrait-card { flex-basis: calc((100% - 18px) / 2); }
   .portfolio-featured-copy { padding: 38px 30px; }
 }
 
@@ -337,8 +337,7 @@ button { font: inherit; }
   .portfolio-projects { padding-block: 16px 76px; }
   .portfolio-featured { padding: 8px; border-radius: 22px; }
   .portfolio-featured-copy { padding: 30px 18px 24px; }
-  .portfolio-portrait-grid { grid-template-columns: 1fr; }
-  .portfolio-portrait-card { width: min(100%, 390px); justify-self: center; border-radius: 22px; }
+  .portfolio-portrait-card { flex-basis: 100%; max-width: 390px; border-radius: 22px; }
   .portfolio-card-copy h2 { min-height: auto; }
   .portfolio-empty { min-height: 470px; padding: 48px 24px; border-radius: 24px; }
   .portfolio-closing { min-height: 150px; margin-bottom: 56px; padding-inline: 20px; }
