@@ -96,6 +96,23 @@ class HomepageStructureTests(unittest.TestCase):
 
 
 class HomepagePresentationTests(unittest.TestCase):
+    def test_shared_navigation_has_brand_identity_and_decoration(self):
+        for page_name in ("index.html", "resume.html", "portfolio.html"):
+            source = (ROOT / page_name).read_text(encoding="utf-8")
+            self.assertIn('class="brand-identity"', source, page_name)
+            self.assertIn('class="brand-copy"', source, page_name)
+            self.assertIn("刘凯旋", source, page_name)
+            self.assertIn("AI VISUAL · RESUME AND PORTFOLIO", source, page_name)
+            self.assertIn('class="nav-ornament" aria-hidden="true"', source, page_name)
+            self.assertRegex(source, r'href="styles\.css\?v=\d+"', page_name)
+
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn(".brand-identity", css)
+        self.assertIn(".brand-copy", css)
+        self.assertIn(".nav-ornament", css)
+        mobile = css[css.index("@media (max-width: 760px)"):]
+        self.assertRegex(mobile, r"\.brand-copy\s*,\s*\.nav-ornament\s*\{[^}]*display:\s*none")
+
     def test_images_reserve_space_and_defer_below_fold_work(self):
         _, page, _ = parse_homepage()
         self.assertEqual(len(page.images), 4)
