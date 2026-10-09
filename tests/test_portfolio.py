@@ -164,6 +164,11 @@ class PortfolioStructureTests(unittest.TestCase):
 
 
 class PortfolioPresentationTests(unittest.TestCase):
+    def test_portfolio_versions_interactive_assets(self):
+        source, _, _ = parse_portfolio()
+        self.assertRegex(source, r'href="styles\.css\?v=\d+"')
+        self.assertRegex(source, r'src="script\.js\?v=\d+"')
+
     def test_image_preview_uses_full_screen_scrollable_overlay(self):
         css = (ROOT / "styles.css").read_text(encoding="utf-8")
         self.assertIn(".image-lightbox::backdrop", css)
