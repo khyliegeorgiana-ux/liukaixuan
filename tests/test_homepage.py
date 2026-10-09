@@ -190,6 +190,18 @@ class HomepagePresentationTests(unittest.TestCase):
         self.assertIn('.nav-pill[aria-current="page"]', css)
         self.assertIn(".nav-pill:hover", css)
 
+    def test_featured_work_link_is_a_compact_pill_button(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        heading = re.search(r"\.work-heading\s*\{(?P<body>[^}]*)\}", css, re.S)
+        link = re.search(r"\.text-link\s*\{(?P<body>[^}]*)\}", css, re.S)
+
+        self.assertIsNotNone(heading)
+        self.assertIn("grid-template-columns: 1fr auto", heading.group("body"))
+        self.assertIsNotNone(link)
+        self.assertIn("display: inline-flex", link.group("body"))
+        self.assertIn("border-radius: 999px", link.group("body"))
+        self.assertIn("font-size: 12px", link.group("body"))
+
 
 if __name__ == "__main__":
     unittest.main()
