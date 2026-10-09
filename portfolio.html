@@ -36,11 +36,11 @@
         <p>以 AI 拓展产品表达，用画面和节奏呈现内容价值。这里收录电商视觉与 AI 视频创作实践。</p>
       </div>
       <div class="portfolio-tabs" id="portfolio-categories" role="tablist" aria-label="作品分类">
-        <button class="portfolio-tab" id="design-tab" type="button" role="tab" aria-selected="false" aria-controls="design-projects" data-category="design">
+        <button class="portfolio-tab" id="design-tab" type="button" role="tab" tabindex="-1" aria-selected="false" aria-controls="design-projects" data-category="design">
           <span class="portfolio-tab-icon portfolio-tab-icon-image" aria-hidden="true"></span>
           电商设计图
         </button>
-        <button class="portfolio-tab is-active" id="video-tab" type="button" role="tab" aria-selected="true" aria-controls="video-projects" data-category="video">
+        <button class="portfolio-tab is-active" id="video-tab" type="button" role="tab" tabindex="0" aria-selected="true" aria-controls="video-projects" data-category="video">
           <span class="portfolio-tab-icon portfolio-tab-icon-video" aria-hidden="true"></span>
           AI 视频
         </button>
@@ -48,38 +48,54 @@
       <span class="portfolio-intro-orbit" aria-hidden="true"></span>
     </section>
 
-    <section class="portfolio-projects section-shell" aria-live="polite">
+    <section class="portfolio-projects section-shell">
       <div class="design-gallery" id="design-projects" role="tabpanel" aria-labelledby="design-tab" hidden>
         <figure class="design-card reveal">
-          <img class="design-image" src="assets/portfolio/designs/coffee-machine.webp" alt="咖啡机详情页" loading="lazy" decoding="async">
+          <button class="design-preview-trigger" type="button" aria-label="放大查看咖啡机详情页">
+            <img class="design-image" src="assets/portfolio/designs/coffee-machine.webp" alt="咖啡机详情页" width="576" height="1344" loading="lazy" decoding="async">
+          </button>
           <figcaption><span>01 · APPLIANCE</span><h2>咖啡机详情页</h2></figcaption>
         </figure>
         <figure class="design-card reveal">
-          <img class="design-image" src="assets/portfolio/designs/portable-fan.webp" alt="便携风扇详情页" loading="lazy" decoding="async">
+          <button class="design-preview-trigger" type="button" aria-label="放大查看便携风扇详情页">
+            <img class="design-image" src="assets/portfolio/designs/portable-fan.webp" alt="便携风扇详情页" width="1000" height="1333" loading="lazy" decoding="async">
+          </button>
           <figcaption><span>02 · LIFESTYLE</span><h2>便携风扇详情页</h2></figcaption>
         </figure>
         <figure class="design-card reveal">
-          <img class="design-image" src="assets/portfolio/designs/cloud-sofa.webp" alt="云朵沙发详情页" loading="lazy" decoding="async">
+          <button class="design-preview-trigger" type="button" aria-label="放大查看云朵沙发详情页">
+            <img class="design-image" src="assets/portfolio/designs/cloud-sofa.webp" alt="云朵沙发详情页" width="1000" height="667" loading="lazy" decoding="async">
+          </button>
           <figcaption><span>03 · HOME</span><h2>云朵沙发详情页</h2></figcaption>
         </figure>
         <figure class="design-card reveal">
-          <img class="design-image" src="assets/portfolio/designs/toothpaste.webp" alt="钻石皓洁牙膏详情页" loading="lazy" decoding="async">
+          <button class="design-preview-trigger" type="button" aria-label="放大查看钻石皓洁牙膏详情页">
+            <img class="design-image" src="assets/portfolio/designs/toothpaste.webp" alt="钻石皓洁牙膏详情页" width="1000" height="1333" loading="lazy" decoding="async">
+          </button>
           <figcaption><span>04 · BEAUTY</span><h2>钻石皓洁牙膏详情页</h2></figcaption>
         </figure>
         <figure class="design-card reveal">
-          <img class="design-image" src="assets/portfolio/designs/rice-cooker.webp" alt="智能电饭煲详情页" loading="lazy" decoding="async">
+          <button class="design-preview-trigger" type="button" aria-label="放大查看智能电饭煲详情页">
+            <img class="design-image" src="assets/portfolio/designs/rice-cooker.webp" alt="智能电饭煲详情页" width="576" height="1344" loading="lazy" decoding="async">
+          </button>
           <figcaption><span>05 · APPLIANCE</span><h2>智能电饭煲详情页</h2></figcaption>
         </figure>
         <figure class="design-card reveal">
-          <img class="design-image" src="assets/portfolio/designs/headphones-design.webp" alt="Hi-Fi 耳机详情页" loading="lazy" decoding="async">
+          <button class="design-preview-trigger" type="button" aria-label="放大查看 Hi-Fi 耳机详情页">
+            <img class="design-image" src="assets/portfolio/designs/headphones-design.webp" alt="Hi-Fi 耳机详情页" width="1000" height="667" loading="lazy" decoding="async">
+          </button>
           <figcaption><span>06 · DIGITAL</span><h2>Hi-Fi 耳机详情页</h2></figcaption>
         </figure>
         <figure class="design-card reveal">
-          <img class="design-image" src="assets/portfolio/designs/sun-hat.webp" alt="防晒帽详情页" loading="lazy" decoding="async">
+          <button class="design-preview-trigger" type="button" aria-label="放大查看防晒帽详情页">
+            <img class="design-image" src="assets/portfolio/designs/sun-hat.webp" alt="防晒帽详情页" width="768" height="1024" loading="lazy" decoding="async">
+          </button>
           <figcaption><span>07 · OUTDOOR</span><h2>防晒帽详情页</h2></figcaption>
         </figure>
         <figure class="design-card reveal">
-          <img class="design-image" src="assets/portfolio/designs/sun-protective-clothing.webp" alt="冰感防晒衣详情页" loading="lazy" decoding="async">
+          <button class="design-preview-trigger" type="button" aria-label="放大查看冰感防晒衣详情页">
+            <img class="design-image" src="assets/portfolio/designs/sun-protective-clothing.webp" alt="冰感防晒衣详情页" width="1000" height="1333" loading="lazy" decoding="async">
+          </button>
           <figcaption><span>08 · OUTDOOR</span><h2>冰感防晒衣详情页</h2></figcaption>
         </figure>
       </div>
@@ -87,7 +103,7 @@
       <div class="portfolio-video-panel" id="video-projects" role="tabpanel" aria-labelledby="video-tab">
         <article class="portfolio-featured portfolio-card reveal" id="featured-video">
           <div class="portfolio-media portfolio-media-landscape">
-            <video class="portfolio-video" controls preload="metadata" playsinline poster="assets/portfolio/posters/headphones.jpg" aria-label="播放沉浸式耳机产品视觉">
+            <video class="portfolio-video" controls preload="none" playsinline poster="assets/portfolio/posters/headphones.jpg" aria-label="播放沉浸式耳机产品视觉">
               <source src="assets/portfolio/videos/headphones.mp4" type="video/mp4">
               当前浏览器不支持视频播放。
             </video>
@@ -107,7 +123,7 @@
         <div class="portfolio-portrait-grid" id="portrait-videos">
           <article class="portfolio-card portfolio-portrait-card reveal">
             <div class="portfolio-media portfolio-media-portrait">
-              <video class="portfolio-video" controls preload="metadata" playsinline poster="assets/portfolio/posters/cleaning-cloth.jpg" aria-label="播放汽车玻璃清洁布演示">
+              <video class="portfolio-video" controls preload="none" playsinline poster="assets/portfolio/posters/cleaning-cloth.jpg" aria-label="播放汽车玻璃清洁布演示">
                 <source src="assets/portfolio/videos/cleaning-cloth.mp4" type="video/mp4">
                 当前浏览器不支持视频播放。
               </video>
@@ -122,7 +138,7 @@
 
           <article class="portfolio-card portfolio-portrait-card reveal">
             <div class="portfolio-media portfolio-media-portrait">
-              <video class="portfolio-video" controls preload="metadata" playsinline poster="assets/portfolio/posters/windshield-cleaner.jpg" aria-label="播放汽车挡风玻璃清洁器演示">
+              <video class="portfolio-video" controls preload="none" playsinline poster="assets/portfolio/posters/windshield-cleaner.jpg" aria-label="播放汽车挡风玻璃清洁器演示">
                 <source src="assets/portfolio/videos/windshield-cleaner.mp4" type="video/mp4">
                 当前浏览器不支持视频播放。
               </video>
@@ -137,7 +153,7 @@
 
           <article class="portfolio-card portfolio-portrait-card reveal">
             <div class="portfolio-media portfolio-media-portrait">
-              <video class="portfolio-video" controls preload="metadata" playsinline poster="assets/portfolio/posters/ice-tray.jpg" aria-label="播放便携制冰盒产品短片">
+              <video class="portfolio-video" controls preload="none" playsinline poster="assets/portfolio/posters/ice-tray.jpg" aria-label="播放便携制冰盒产品短片">
                 <source src="assets/portfolio/videos/ice-tray.mp4" type="video/mp4">
                 当前浏览器不支持视频播放。
               </video>
@@ -152,7 +168,7 @@
 
           <article class="portfolio-card portfolio-portrait-card reveal">
             <div class="portfolio-media portfolio-media-portrait">
-              <video class="portfolio-video" controls preload="metadata" playsinline poster="assets/portfolio/posters/storage-box.jpg" aria-label="播放帽子收纳盒场景展示">
+              <video class="portfolio-video" controls preload="none" playsinline poster="assets/portfolio/posters/storage-box.jpg" aria-label="播放帽子收纳盒场景展示">
                 <source src="assets/portfolio/videos/storage-box.mp4" type="video/mp4">
                 当前浏览器不支持视频播放。
               </video>
@@ -167,7 +183,7 @@
 
           <article class="portfolio-card portfolio-portrait-card reveal">
             <div class="portfolio-media portfolio-media-portrait">
-              <video class="portfolio-video" controls preload="metadata" playsinline poster="assets/portfolio/posters/storage-bag.jpg" aria-label="播放真空收纳袋场景短片">
+              <video class="portfolio-video" controls preload="none" playsinline poster="assets/portfolio/posters/storage-bag.jpg" aria-label="播放真空收纳袋场景短片">
                 <source src="assets/portfolio/videos/storage-bag.mp4" type="video/mp4">
                 当前浏览器不支持视频播放。
               </video>
@@ -182,7 +198,7 @@
 
           <article class="portfolio-card portfolio-portrait-card reveal">
             <div class="portfolio-media portfolio-media-portrait">
-              <video class="portfolio-video" controls preload="metadata" playsinline poster="assets/portfolio/posters/fluffy-spray.jpg" aria-label="播放蓬松喷雾使用短片">
+              <video class="portfolio-video" controls preload="none" playsinline poster="assets/portfolio/posters/fluffy-spray.jpg" aria-label="播放蓬松喷雾使用短片">
                 <source src="assets/portfolio/videos/fluffy-spray.mp4" type="video/mp4">
                 当前浏览器不支持视频播放。
               </video>
@@ -197,7 +213,7 @@
 
           <article class="portfolio-card portfolio-portrait-card reveal">
             <div class="portfolio-media portfolio-media-portrait">
-              <video class="portfolio-video" controls preload="metadata" playsinline poster="assets/portfolio/posters/outfit.jpg" aria-label="播放都市休闲穿搭短片">
+              <video class="portfolio-video" controls preload="none" playsinline poster="assets/portfolio/posters/outfit.jpg" aria-label="播放都市休闲穿搭短片">
                 <source src="assets/portfolio/videos/outfit.mp4" type="video/mp4">
                 当前浏览器不支持视频播放。
               </video>
@@ -218,6 +234,13 @@
       <p>持续创作，持续更新。更多电商视觉与 AI 视频作品将陆续加入。</p>
     </section>
   </main>
+
+  <dialog class="image-lightbox" aria-label="电商设计图大图预览">
+    <div class="image-lightbox-content">
+      <button class="image-lightbox-close" type="button" aria-label="关闭图片预览"><span aria-hidden="true">×</span></button>
+      <img class="image-lightbox-image" alt="">
+    </div>
+  </dialog>
 
   <footer class="site-footer section-shell">
     <p>AI VISUAL · VIDEO EDITING</p>

@@ -73,13 +73,19 @@ class PortfolioStructureTests(unittest.TestCase):
         self.assertIn("咖啡机详情页", text)
         self.assertNotIn("作品整理中", text)
 
+    def test_category_tabs_use_roving_focus_without_live_region(self):
+        source, _, _ = parse_portfolio()
+        self.assertIn('id="design-tab" type="button" role="tab" tabindex="-1"', source)
+        self.assertIn('id="video-tab" type="button" role="tab" tabindex="0"', source)
+        self.assertNotIn('aria-live="polite"', source)
+
     def test_portfolio_uses_eight_progressive_video_players(self):
         source, page, _ = parse_portfolio()
         self.assertEqual(len(page.videos), 8)
         self.assertEqual(len(page.sources), 8)
         for video in page.videos:
             self.assertIn("controls", video)
-            self.assertEqual(video.get("preload"), "metadata")
+            self.assertEqual(video.get("preload"), "none")
             self.assertIn("playsinline", video)
             self.assertNotIn("autoplay", video)
             self.assertTrue(video.get("poster", "").startswith("assets/portfolio/posters/"))
@@ -137,14 +143,34 @@ class PortfolioStructureTests(unittest.TestCase):
 
         self.assertEqual([image.get("src") for image in gallery_images], [item[0] for item in expected])
         self.assertEqual([image.get("alt") for image in gallery_images], [item[1] for item in expected])
+        for image in gallery_images:
+            self.assertGreater(int(image.get("width", 0)), 0)
+            self.assertGreater(int(image.get("height", 0)), 0)
+            self.assertEqual(image.get("loading"), "lazy")
+            self.assertEqual(image.get("decoding"), "async")
         self.assertEqual(source.count('class="design-card reveal"'), 8)
         for relative, title in expected:
             self.assertIn(title, text)
             self.assertTrue((ROOT / relative).is_file(), relative)
         self.assertNotIn("电商设计图作品整理中", text)
 
+    def test_ecommerce_images_have_accessible_preview_controls(self):
+        source, _, _ = parse_portfolio()
+        self.assertEqual(source.count('class="design-preview-trigger"'), 8)
+        self.assertEqual(source.count('aria-label="放大查看'), 8)
+        self.assertIn('class="image-lightbox"', source)
+        self.assertIn('class="image-lightbox-close"', source)
+        self.assertIn('class="image-lightbox-image"', source)
+
 
 class PortfolioPresentationTests(unittest.TestCase):
+    def test_image_preview_uses_full_screen_scrollable_overlay(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        self.assertIn(".image-lightbox::backdrop", css)
+        self.assertIn(".image-lightbox-close", css)
+        self.assertIn("overflow: auto", css)
+        self.assertIn("cursor: zoom-in", css)
+
     def test_portfolio_defines_cinema_layout_and_aspect_ratios(self):
         css = (ROOT / "styles.css").read_text(encoding="utf-8")
         self.assertIn(".portfolio-page", css)
@@ -218,6 +244,23 @@ class PortfolioPresentationTests(unittest.TestCase):
 
 
 class PortfolioInteractionTests(unittest.TestCase):
+    def test_design_images_open_and_close_accessible_preview(self):
+        script = (ROOT / "script.js").read_text(encoding="utf-8")
+        self.assertIn("designPreviewTriggers", script)
+        self.assertIn("imageLightbox.showModal()", script)
+        self.assertIn("imageLightbox.close()", script)
+        self.assertIn("event.target === imageLightbox", script)
+        self.assertIn("lastPreviewTrigger?.focus()", script)
+
+    def test_tabs_support_arrow_home_and_end_keys(self):
+        script = (ROOT / "script.js").read_text(encoding="utf-8")
+        self.assertIn("setAttribute('tabindex'", script)
+        self.assertIn("ArrowLeft", script)
+        self.assertIn("ArrowRight", script)
+        self.assertIn("Home", script)
+        self.assertIn("End", script)
+        self.assertIn("nextTab.focus()", script)
+
     def test_script_coordinates_categories_and_video_playback(self):
         script = (ROOT / "script.js").read_text(encoding="utf-8")
         self.assertIn("portfolioTabs", script)

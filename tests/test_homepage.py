@@ -12,6 +12,7 @@ class PageParser(HTMLParser):
         super().__init__()
         self.ids = set()
         self.links = []
+        self.images = []
         self.text = []
 
     def handle_starttag(self, tag, attrs):
@@ -20,6 +21,8 @@ class PageParser(HTMLParser):
             self.ids.add(attributes["id"])
         if tag == "a" and "href" in attributes:
             self.links.append(attributes["href"])
+        if tag == "img":
+            self.images.append(attributes)
 
     def handle_data(self, data):
         self.text.append(data)
@@ -93,6 +96,20 @@ class HomepageStructureTests(unittest.TestCase):
 
 
 class HomepagePresentationTests(unittest.TestCase):
+    def test_images_reserve_space_and_defer_below_fold_work(self):
+        _, page, _ = parse_homepage()
+        self.assertEqual(len(page.images), 4)
+        for image in page.images:
+            self.assertGreater(int(image.get("width", 0)), 0)
+            self.assertGreater(int(image.get("height", 0)), 0)
+            self.assertEqual(image.get("decoding"), "async")
+
+        hero, *work_images = page.images
+        self.assertEqual(hero.get("fetchpriority"), "high")
+        self.assertNotIn("loading", hero)
+        for image in work_images:
+            self.assertEqual(image.get("loading"), "lazy")
+
     def test_assets_are_linked(self):
         source, _, _ = parse_homepage()
         self.assertRegex(source, r'href="styles\.css\?v=\d+"')

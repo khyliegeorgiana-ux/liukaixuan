@@ -43,6 +43,11 @@ if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-mot
 const portfolioTabs = document.querySelectorAll('.portfolio-tab');
 const portfolioVideos = document.querySelectorAll('.portfolio-video');
 const portfolioPlayButtons = document.querySelectorAll('.portfolio-play');
+const designPreviewTriggers = document.querySelectorAll('.design-preview-trigger');
+const imageLightbox = document.querySelector('.image-lightbox');
+const imageLightboxImage = document.querySelector('.image-lightbox-image');
+const imageLightboxClose = document.querySelector('.image-lightbox-close');
+let lastPreviewTrigger;
 
 function pausePortfolioVideos() {
   portfolioVideos.forEach((video) => {
@@ -55,6 +60,7 @@ function activatePortfolioCategory(categoryName) {
   portfolioTabs.forEach((tab) => {
     const isActive = tab.dataset.category === categoryName;
     tab.setAttribute('aria-selected', String(isActive));
+    tab.setAttribute('tabindex', isActive ? '0' : '-1');
     tab.classList.toggle('is-active', isActive);
     const panel = document.getElementById(tab.getAttribute('aria-controls'));
     if (panel) panel.hidden = !isActive;
@@ -64,7 +70,49 @@ function activatePortfolioCategory(categoryName) {
 
 portfolioTabs.forEach((tab) => {
   tab.addEventListener('click', () => activatePortfolioCategory(tab.dataset.category));
+  tab.addEventListener('keydown', (event) => {
+    const tabs = Array.from(portfolioTabs);
+    const currentIndex = tabs.indexOf(tab);
+    let nextIndex;
+
+    if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % tabs.length;
+    if (event.key === 'Home') nextIndex = 0;
+    if (event.key === 'End') nextIndex = tabs.length - 1;
+    if (nextIndex === undefined) return;
+
+    event.preventDefault();
+    const nextTab = tabs[nextIndex];
+    activatePortfolioCategory(nextTab.dataset.category);
+    nextTab.focus();
+  });
 });
+
+if (imageLightbox && imageLightboxImage && imageLightboxClose) {
+  designPreviewTriggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const previewImage = trigger.querySelector('.design-image');
+      if (!previewImage) return;
+      lastPreviewTrigger = trigger;
+      imageLightboxImage.src = previewImage.currentSrc || previewImage.src;
+      imageLightboxImage.alt = previewImage.alt;
+      imageLightboxImage.width = previewImage.naturalWidth || Number(previewImage.getAttribute('width'));
+      imageLightboxImage.height = previewImage.naturalHeight || Number(previewImage.getAttribute('height'));
+      document.body.classList.add('lightbox-open');
+      imageLightbox.showModal();
+    });
+  });
+
+  imageLightboxClose.addEventListener('click', () => imageLightbox.close());
+  imageLightbox.addEventListener('click', (event) => {
+    if (event.target === imageLightbox) imageLightbox.close();
+  });
+  imageLightbox.addEventListener('close', () => {
+    document.body.classList.remove('lightbox-open');
+    imageLightboxImage.removeAttribute('src');
+    lastPreviewTrigger?.focus();
+  });
+}
 
 portfolioPlayButtons.forEach((button) => {
   button.addEventListener('click', () => {
