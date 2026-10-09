@@ -95,7 +95,7 @@ class HomepageStructureTests(unittest.TestCase):
 class HomepagePresentationTests(unittest.TestCase):
     def test_assets_are_linked(self):
         source, _, _ = parse_homepage()
-        self.assertIn('href="styles.css"', source)
+        self.assertRegex(source, r'href="styles\.css\?v=\d+"')
         self.assertIn('src="script.js"', source)
 
     def test_styles_define_palette_and_responsive_rules(self):
