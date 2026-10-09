@@ -100,9 +100,10 @@ button { font: inherit; }
 .capability-card li { padding: 5px 11px; border: 1px solid var(--color-line); border-radius: 999px; color: #607182; background: var(--color-blue-mist); font-size: 11px; }
 
 .featured { padding-block: 120px; }
-.work-heading { display: grid; grid-template-columns: 1fr .78fr auto; align-items: end; gap: 60px; margin-bottom: 44px; }
+.work-heading { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 32px; margin-bottom: 44px; }
 .work-heading > p { margin: 0; color: var(--color-muted); font-size: 14px; }
-.text-link { padding-bottom: 6px; border-bottom: 1px solid var(--color-ink); font-size: 13px; font-weight: 650; white-space: nowrap; }
+.text-link { display: inline-flex; min-height: 36px; align-items: center; justify-content: center; justify-self: end; padding: 7px 16px; border: 1px solid rgba(23,35,49,.42); border-radius: 999px; background: rgba(255,255,255,.72); font-size: 12px; font-weight: 650; white-space: nowrap; transition: color .22s, background .22s, border-color .22s, transform .22s, box-shadow .22s; }
+.text-link:hover { color: white; border-color: var(--color-ink); background: var(--color-ink); box-shadow: 0 8px 18px rgba(23,35,49,.13); transform: translateY(-1px); }
 .work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .work-card { overflow: hidden; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: white; transition: transform .3s, box-shadow .3s; }
 .bento-card-featured { grid-column: 1 / -1; }
@@ -311,6 +312,7 @@ button { font: inherit; }
   .capabilities-layout { gap: 42px; }
   .work-heading { grid-template-columns: 1fr; gap: 22px; }
   .work-heading > p { grid-column: auto; grid-row: auto; }
+  .text-link { justify-self: start; }
   .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .bento-card { grid-column: auto; }
   .bento-card-featured, .work-card:last-child { grid-column: 1 / -1; }
@@ -368,3 +370,4 @@ button { font: inherit; }
 @media print {
   .js .reveal { opacity: 1 !important; transform: none !important; }
 }
+
