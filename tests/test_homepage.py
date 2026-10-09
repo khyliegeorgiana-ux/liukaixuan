@@ -71,6 +71,7 @@ class HomepageStructureTests(unittest.TestCase):
         self.assertIn("AI 美工", text)
         self.assertIn("视频剪辑", text)
         self.assertNotIn("平面设计", text)
+        self.assertNotIn("作品正在持续整理中", text)
 
     def test_contact_cta_targets_resume_contact(self):
         _, page, _ = parse_homepage()
@@ -192,3 +193,4 @@ class HomepagePresentationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
