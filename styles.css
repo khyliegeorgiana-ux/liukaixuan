@@ -254,7 +254,7 @@ button { font: inherit; }
 .portfolio-meta { display: flex; gap: 10px; margin-top: 24px; color: #4d6c84; font-size: 11px; font-weight: 700; }
 .portfolio-meta span, .portfolio-meta time { padding: 5px 9px; border: 1px solid rgba(46,111,167,.15); border-radius: 999px; background: rgba(237,247,255,.88); }
 .portfolio-portrait-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
-.portfolio-portrait-card { flex: 0 1 calc((100% - 54px) / 4); min-width: 0; padding: 9px; }
+.portfolio-portrait-card { flex: 0 1 calc((100% - 36px) / 3); min-width: 0; padding: 9px; }
 .portfolio-card-copy { padding: 20px 12px 14px; }
 .portfolio-card-copy h2 { min-height: 3em; margin: 0; font-size: 18px; line-height: 1.5; }
 .portfolio-card-copy .portfolio-meta { margin-top: 16px; }

@@ -79,18 +79,18 @@ class PortfolioStructureTests(unittest.TestCase):
         self.assertIn('id="video-tab" type="button" role="tab" tabindex="0"', source)
         self.assertNotIn('aria-live="polite"', source)
 
-    def test_portfolio_uses_eight_progressive_video_players(self):
+    def test_portfolio_uses_ten_progressive_video_players(self):
         source, page, _ = parse_portfolio()
-        self.assertEqual(len(page.videos), 8)
-        self.assertEqual(len(page.sources), 8)
+        self.assertEqual(len(page.videos), 10)
+        self.assertEqual(len(page.sources), 10)
         for video in page.videos:
             self.assertIn("controls", video)
             self.assertEqual(video.get("preload"), "none")
             self.assertIn("playsinline", video)
             self.assertNotIn("autoplay", video)
             self.assertTrue(video.get("poster", "").startswith("assets/portfolio/posters/"))
-        self.assertEqual(len({video["poster"] for video in page.videos}), 8)
-        self.assertEqual(source.count('class="portfolio-play"'), 8)
+        self.assertEqual(len({video["poster"] for video in page.videos}), 10)
+        self.assertEqual(source.count('class="portfolio-play"'), 10)
 
     def test_portfolio_uses_approved_media_order_and_titles(self):
         _, page, text = parse_portfolio()
@@ -99,8 +99,10 @@ class PortfolioStructureTests(unittest.TestCase):
             "assets/portfolio/videos/cleaning-cloth.mp4",
             "assets/portfolio/videos/windshield-cleaner.mp4",
             "assets/portfolio/videos/ice-tray.mp4",
+            "assets/portfolio/videos/toy-blocks.mp4",
             "assets/portfolio/videos/storage-box.mp4",
             "assets/portfolio/videos/storage-bag.mp4",
+            "assets/portfolio/videos/scented-candle.mp4",
             "assets/portfolio/videos/fluffy-spray.mp4",
             "assets/portfolio/videos/outfit.mp4",
         ]
@@ -110,8 +112,10 @@ class PortfolioStructureTests(unittest.TestCase):
             "汽车玻璃清洁布演示",
             "汽车挡风玻璃清洁器演示",
             "便携制冰盒产品短片",
+            "玩具积木创意短片",
             "帽子收纳盒场景展示",
             "真空收纳袋场景短片",
+            "蜡烛香薰氛围短片",
             "蓬松喷雾使用短片",
             "都市休闲穿搭短片",
         ]
@@ -206,16 +210,19 @@ class PortfolioPresentationTests(unittest.TestCase):
         self.assertIn(".portfolio-portrait-card", mobile)
         self.assertRegex(mobile, r"flex-basis:\s*100%")
 
-    def test_seven_portrait_cards_wrap_and_center_the_last_row(self):
+    def test_nine_portrait_cards_form_a_three_column_grid(self):
         source, _, _ = parse_portfolio()
         css = (ROOT / "styles.css").read_text(encoding="utf-8")
         portrait_grid = re.search(r"\.portfolio-portrait-grid\s*\{(?P<body>[^}]*)\}", css, re.S)
+        portrait_card = re.search(r"\.portfolio-portrait-card\s*\{(?P<body>[^}]*)\}", css, re.S)
 
-        self.assertEqual(source.count('class="portfolio-card portfolio-portrait-card reveal"'), 7)
+        self.assertEqual(source.count('class="portfolio-card portfolio-portrait-card reveal"'), 9)
         self.assertIsNotNone(portrait_grid)
+        self.assertIsNotNone(portrait_card)
         self.assertIn("display: flex", portrait_grid.group("body"))
         self.assertIn("flex-wrap: wrap", portrait_grid.group("body"))
         self.assertIn("justify-content: center", portrait_grid.group("body"))
+        self.assertRegex(portrait_card.group("body"), r"flex:\s*0\s+1\s+calc\(\(100%\s*-\s*36px\)\s*/\s*3\)")
 
     def test_portfolio_styles_progressive_play_and_tab_states(self):
         css = (ROOT / "styles.css").read_text(encoding="utf-8")
